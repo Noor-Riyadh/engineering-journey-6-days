@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الرحلة الهندسية — 6 أيام</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rakkas&family=Tajawal:wght@400;500;700;900&family=Kalam:wght@400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#3a3a3a;
+    --paper:#faf8f3;
+    --indigo:#6d6ad6;
+    --indigo-light:#e6e7fb;
+    --teal:#3fa89a;
+    --teal-light:#e0f5f1;
+    --amber:#d19a3d;
+    --amber-light:#faf0dc;
+    --rose:#d97a8f;
+    --rose-light:#fbe8ec;
+    --grid:#e9e5da;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image: radial-gradient(circle, #e4dfd0 1.3px, transparent 1.3px);
+    background-size: 26px 26px;
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{ font-family:'Rakkas', cursive; }
+  .quran{ font-family:'Amiri', serif; }
+
+  .wrap{ max-width:1000px; margin:0 auto; padding:6vh 6vw 8vh; }
+
+  .sketch{
+    border: 2.5px solid var(--ink);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    background:#fff;
+    box-shadow: 3px 3px 0 rgba(30,30,30,0.08);
+  }
+  .sketch.r1{ transform:rotate(-0.5deg); }
+  .sketch.r2{ transform:rotate(0.6deg); }
+  .sketch.r3{ transform:rotate(-0.9deg); }
+  .sketch.r4{ transform:rotate(0.4deg); }
+  .sketch.r5{ transform:rotate(-0.3deg); }
+  .sketch.r6{ transform:rotate(0.8deg); }
+
+  .hachure-indigo{ background-image: repeating-linear-gradient(45deg, var(--indigo-light) 0 3px, transparent 3px 9px); }
+  .hachure-teal{ background-image: repeating-linear-gradient(45deg, var(--teal-light) 0 3px, transparent 3px 9px); }
+  .hachure-amber{ background-image: repeating-linear-gradient(45deg, var(--amber-light) 0 3px, transparent 3px 9px); }
+  .hachure-rose{ background-image: repeating-linear-gradient(45deg, var(--rose-light) 0 3px, transparent 3px 9px); }
+
+  /* ===== Hero ===== */
+  .hero{ text-align:center; padding-top:2vh; }
+  .badge{
+    display:inline-block; font-family:'Kalam',cursive; font-weight:700; font-size:1rem;
+    border:2.5px solid var(--ink); border-radius:40px; padding:6px 22px;
+    transform:rotate(-2deg); background:#fff; margin-bottom:18px;
+  }
+  h1.title{ font-size:3.4rem; margin:0 0 10px; line-height:1.15; }
+  .hero .sub{ font-size:1.15rem; color:#555; max-width:680px; margin:0 auto; line-height:1.8; }
+  .author{ margin-top:22px; display:inline-flex; align-items:center; gap:10px; font-family:'Kalam',cursive; font-size:.95rem; }
+  .author a{ color:var(--indigo); text-decoration:none; border-bottom:2px solid var(--indigo-light); }
+  .author a:hover{ border-bottom-color:var(--indigo); }
+
+  /* ===== About / credit section ===== */
+  .about-box{ margin-top:6vh; padding:26px 30px; }
+  .about-box h2{ font-family:'Kalam',cursive; font-size:1.2rem; margin:0 0 12px; color:var(--indigo); text-align:center;}
+  .about-box p{ font-size:.95rem; line-height:1.9; margin:0 0 10px; text-align:center; }
+  .credit-row{ margin-top:16px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .credit-chip{
+    display:inline-flex; align-items:center; gap:8px; font-family:'Kalam',cursive; font-size:.85rem;
+    border:2px solid var(--ink); border-radius:20px; padding:6px 16px; background:#fff; text-decoration:none; color:var(--ink);
+  }
+  .credit-chip:hover{ background:var(--indigo-light); }
+
+  /* ===== Quran verse ===== */
+  .ayah-box{ margin:5vh auto 0; padding:30px 26px; text-align:center; max-width:640px; }
+  .ayah-box p.quran{ font-size:1.7rem; line-height:2.1; margin:0; color:var(--ink); }
+  .ayah-box .ref{ margin-top:12px; font-family:'Kalam',cursive; font-size:.85rem; color:#777; }
+
+  /* ===== Days grid ===== */
+  .days-title{ text-align:center; margin-top:7vh; }
+  .days-title h2{ font-family:'Kalam',cursive; font-size:1.4rem; color:var(--ink); margin-bottom:4px; }
+  .days-title p{ font-size:.9rem; color:#777; margin:0; }
+
+  .days-grid{ margin-top:30px; display:grid; grid-template-columns:repeat(2, 1fr); gap:22px; }
+  .day-card{
+    display:block; padding:22px 24px; text-decoration:none; color:var(--ink);
+    transition: transform .15s ease;
+  }
+  .day-card:hover{ transform: translateY(-3px); }
+  .day-card .day-num{ font-family:'Kalam',cursive; font-weight:700; font-size:.85rem; color:var(--indigo); margin-bottom:6px; }
+  .day-card h3{ font-family:'Kalam',cursive; font-size:1.05rem; margin:0 0 8px; line-height:1.5; }
+  .day-card p{ font-size:.8rem; color:#666; margin:0; line-height:1.5; }
+  .day-card .soon{ display:inline-block; margin-top:10px; font-size:.72rem; font-family:'Kalam',cursive; color:#999; border:1.5px dashed #bbb; border-radius:14px; padding:2px 10px; }
+
+  /* ===== Thank you footer ===== */
+  .thanks{ margin-top:8vh; padding:28px 30px; text-align:center; }
+  .thanks h2{ font-family:'Kalam',cursive; font-size:1.15rem; margin:0 0 10px; color:var(--ink); }
+  .thanks p{ font-size:.92rem; line-height:1.8; color:#444; max-width:600px; margin:0 auto 16px; }
+  .thanks a.chip{
+    display:inline-flex; align-items:center; gap:8px; font-family:'Kalam',cursive; font-size:.88rem;
+    border:2px solid var(--ink); border-radius:20px; padding:7px 18px; background:#fff; text-decoration:none; color:var(--ink);
+  }
+  .thanks a.chip:hover{ background:var(--teal-light); }
+
+  footer.page-end{ text-align:center; margin-top:6vh; font-size:.78rem; color:#999; }
+
+  @media (max-width: 720px){
+    h1.title{ font-size:2.2rem; }
+    .days-grid{ grid-template-columns:1fr; }
+    .ayah-box p.quran{ font-size:1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">برنامج تدريبي · 6 أيام</div>
+    <h1 class="title display">الرحلة الهندسية</h1>
+    <p class="sub">من أول Requirement لمشروع، لحد الدفاع عن Capstone كامل — ست محطات هندسية متتالية.</p>
+    <div class="author">
+      <span>إعداد وتلخيص: Noor Riyadh</span>
+      <span>·</span>
+      <a href="https://www.linkedin.com/in/noor-riyadh" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+
+  <!-- ABOUT / CREDITS -->
+  <div class="about-box sketch r1 hachure-indigo">
+    <h2>الملخص ده عبارة عن إيه؟</h2>
+    <p>هذه الصفحة نقطة انطلاق لملخصات ستة أيام من رحلة هندسية متكاملة، بتوثّق وتنظّم المحتوى بأسلوب بسيط وواضح للمراجعة السريعة.</p>
+    <p>المحتوى الأساسي هو شرح الباشمهندس محمد إسماعيل، ضمن برنامج Digitera، وبتقديم من Icareer.</p>
+    <div class="credit-row">
+      <a class="credit-chip" href="https://www.linkedin.com/company/icareereg/about/" target="_blank" rel="noopener">🏢 Icareer</a>
+      <a class="credit-chip" href="https://www.linkedin.com/in/mohamed-ismail--dev/" target="_blank" rel="noopener">👨‍🏫 الباشمهندس محمد إسماعيل</a>
+    </div>
+  </div>
+
+  <!-- QURAN VERSE -->
+  <div class="ayah-box sketch r2">
+    <p class="quran">فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ﴿٥﴾ إِنَّ مَعَ الْعُسْرِ يُسْرًا ﴿٦﴾</p>
+    <div class="ref">سورة الشرح — الآيتان ٥-٦</div>
+  </div>
+
+  <!-- DAYS -->
+  <div class="days-title">
+    <h2>الأيام الستة</h2>
+    <p>اضغط على أي يوم لفتح الملخص الخاص بيه</p>
+  </div>
+
+  <div class="days-grid">
+    <a class="day-card sketch r1 hachure-indigo" href="./Day1_HelpDesk_Lite_Action_Plan.html">
+      <div class="day-num">DAY 1</div>
+      <h3>PRD → Engineering Action Plan</h3>
+      <p>Agile SDLC — من فكرة منتج لبداية هندسية جاهزة للتنفيذ</p>
+    </a>
+
+    <a class="day-card sketch r2 hachure-teal" href="./Day2_Agile_Scrum_Jira_Notes.html">
+      <div class="day-num">DAY 2</div>
+      <h3>One Board to Ship</h3>
+      <p>Jira Delivery OPS — من الخطة لمساحة عمل حقيقية</p>
+    </a>
+
+    <a class="day-card sketch r3 hachure-amber" href="./Day3_Lecture_Notes_AI_Workflow.html">
+      <div class="day-num">DAY 3</div>
+      <h3>AI Dev Stack</h3>
+      <p>MCP, Cursor, Claude Code — Output Engineering</p>
+    </a>
+
+    <a class="day-card sketch r4 hachure-rose" href="./Day4_Git_Collaboration_Notes.html">
+      <div class="day-num">DAY 4</div>
+      <h3>Engineering Collaboration Systems</h3>
+      <p>Git, Reviews, ADR/RFC, Tickets</p>
+    </a>
+
+    <a class="day-card sketch r5 hachure-indigo" href="./Day5_Debugging_Software_Bugs_Notes.html">
+      <div class="day-num">DAY 5</div>
+      <h3>Debugging &amp; Requirements Clarification</h3>
+      <p>Under Constraints</p>
+    </a>
+
+    <div class="day-card sketch r6 hachure-teal">
+      <div class="day-num">DAY 6</div>
+      <h3>Capstone</h3>
+      <p>Build &amp; Defend a Tech Project</p>
+      <span class="soon">قريبًا</span>
+    </div>
+  </div>
+
+  <!-- THANK YOU -->
+  <div class="thanks sketch r3 hachure-amber">
+    <h2>شكرًا</h2>
+    <p>شكرًا للباشمهندس محمد إسماعيل على المجهود الواضح في كل تفصيلة من الشرح، وعلى الأسلوب البسيط اللي خلّى المحتوى الصعب يوصل بسهولة.</p>
+    <a class="chip" href="https://www.linkedin.com/in/mohamed-ismail--dev/" target="_blank" rel="noopener">🔗 Mohamed Ismail — LinkedIn</a>
+  </div>
+
+  <footer class="page-end">Noor Riyadh · الرحلة الهندسية · 6 أيام</footer>
+
+</div>
+
+</body>
+</html>

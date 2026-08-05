@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 4 — Git &amp; Engineering Collaboration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rakkas&family=Tajawal:wght@400;500;700;900&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#3a3a3a;
+    --paper:#faf8f3;
+    --indigo:#6d6ad6;
+    --indigo-light:#e6e7fb;
+    --teal:#3fa89a;
+    --teal-light:#e0f5f1;
+    --amber:#d19a3d;
+    --amber-light:#faf0dc;
+    --rose:#d97a8f;
+    --rose-light:#fbe8ec;
+    --grid:#e9e5da;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    background:var(--paper);
+    background-image: radial-gradient(circle, #e4dfd0 1.3px, transparent 1.3px);
+    background-size: 26px 26px;
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{ font-family:'Rakkas', cursive; }
+  .num{ font-family:'Kalam', cursive; font-weight:700; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  .deck{ position:relative; width:100vw; height:100vh; }
+
+  .slide{
+    position:absolute; inset:0;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: 3.5vh 6vw 11vh 6vw;
+    opacity:0;
+    transform: translateX(24px);
+    transition: opacity .35s ease, transform .35s ease;
+    overflow-y:auto;
+  }
+  .slide.active{ display:flex; opacity:1; transform:translateX(0); }
+
+  .eyebrow{
+    font-family:'Kalam',cursive; font-weight:700; font-size:1rem;
+    color:var(--indigo); letter-spacing:.5px; margin-bottom:6px;
+  }
+  h1.title{ font-size:3.2rem; margin:0 0 6px 0; color:var(--ink); }
+  h2.stitle{ font-size:2.1rem; margin:0 auto 4px auto; text-align:center; width:92vw; max-width:820px; word-wrap:break-word; overflow-wrap:break-word; }
+  .sub{ font-size:1.1rem; color:#555; width:780px; max-width:90%; text-align:center; margin: 0 auto; line-height:1.7; word-wrap:break-word; overflow-wrap:break-word; }
+
+  .sketch{
+    border: 2.5px solid var(--ink);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    background:#fff;
+    position:relative;
+    box-shadow: 3px 3px 0 rgba(30,30,30,0.08);
+  }
+  .sketch.r1{ transform:rotate(-0.6deg); }
+  .sketch.r2{ transform:rotate(0.7deg); }
+  .sketch.r3{ transform:rotate(-1.1deg); }
+  .sketch.r4{ transform:rotate(0.4deg); }
+
+  .hachure-indigo{ background-image: repeating-linear-gradient(45deg, var(--indigo-light) 0 3px, transparent 3px 9px); }
+  .hachure-teal{ background-image: repeating-linear-gradient(45deg, var(--teal-light) 0 3px, transparent 3px 9px); }
+  .hachure-amber{ background-image: repeating-linear-gradient(45deg, var(--amber-light) 0 3px, transparent 3px 9px); }
+  .hachure-rose{ background-image: repeating-linear-gradient(45deg, var(--rose-light) 0 3px, transparent 3px 9px); }
+
+  /* ===== Title slide ===== */
+  #s1 .logo-wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+  #s1 .badge{
+    font-family:'Kalam',cursive; font-weight:700; font-size:1.05rem;
+    border:2.5px solid var(--ink); border-radius: 40px; padding:6px 22px;
+    transform:rotate(-2deg); background:#fff;
+  }
+  #s1 h1.title{ font-size:4.2rem; margin-top:14px; }
+  #s1 .arrow-under{ width:260px; height:26px; margin:-6px 0 18px 0; }
+  #s1 .tagline{ font-size:1.3rem; color:#444; width:680px; max-width:90%; min-width:0; text-align:center; line-height:1.8; word-wrap:break-word; overflow-wrap:break-word; }
+  #s1 .stack{ margin-top:30px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+  #s1 .chip{ font-family:'Kalam',cursive; font-weight:700; font-size:.9rem; border:2px solid var(--ink); border-radius:20px; padding:5px 14px; background:#fff; }
+
+  /* ===== Category cards ===== */
+  .cat-row{ display:flex; gap:22px; margin-top:26px; flex-wrap:wrap; justify-content:center; }
+  .cat-card{ width:250px; padding:20px 18px; }
+  .cat-card .icon{ font-size:1.8rem; }
+  .cat-card h3{ font-family:'Kalam',cursive; font-size:1.05rem; margin:8px 0 6px; }
+  .cat-card p{ font-size:.85rem; color:#444; line-height:1.5; margin:0; }
+  .cat-card ul{ margin:0; padding-inline-start:18px; font-size:.82rem; line-height:1.6; text-align:right;}
+
+  /* ===== Note columns ===== */
+  .note-cols{ display:flex; gap:24px; margin-top:22px; flex-wrap:wrap; justify-content:center; max-width:1000px; }
+  .note-card{ width:280px; padding:18px 20px; }
+  .note-card h3{ font-family:'Kalam',cursive; font-size:1rem; margin:0 0 10px; color:var(--indigo); }
+  .note-card ul{ margin:0; padding-inline-start:18px; font-size:.85rem; line-height:1.65; }
+  .note-card li{ margin-bottom:4px; }
+
+  /* ===== Steps (numbered) ===== */
+  .steps{ margin-top:24px; display:flex; flex-direction:column; gap:12px; width:100%; max-width:780px; }
+  .step-row{ display:flex; align-items:flex-start; gap:16px; padding:12px 18px; }
+  .step-row .n{ font-family:'Kalam',cursive; font-weight:700; font-size:1.3rem; color:var(--indigo); min-width:30px; }
+  .step-row h4{ margin:0 0 4px; font-family:'Kalam',cursive; font-size:1rem; }
+  .step-row p{ margin:0; font-size:.82rem; color:#444; line-height:1.5; }
+  .step-row code{ font-family:'JetBrains Mono',monospace; background:#f0f0f0; padding:1px 6px; border-radius:4px; font-size:.78rem; }
+
+  /* ===== Code block ===== */
+  .code-block{
+    background:#f4f4f4; border:1px solid #ddd; border-radius:8px; padding:12px 16px;
+    font-family:'JetBrains Mono',monospace; font-size:.78rem; line-height:1.7; text-align:left; direction:ltr;
+    width:100%; max-width:640px; margin-top:16px; color:#333; white-space:pre-wrap; word-break:break-word;
+  }
+  .code-block .cmt{ color:#888; }
+
+  /* ===== Flow ===== */
+  .flow{ display:flex; align-items:center; gap:6px; margin-top:26px; flex-wrap:wrap; justify-content:center; max-width:1050px;}
+  .flow-box{ width:135px; padding:14px 8px; text-align:center; }
+  .flow-box .n{ font-family:'Kalam',cursive; font-weight:700; color:var(--indigo); font-size:1rem;}
+  .flow-box h4{ font-family:'Kalam',cursive; font-size:.8rem; margin:4px 0 4px; }
+  .flow-box p{ font-size:.68rem; color:#444; margin:0; line-height:1.35;}
+  .flow-arrow{ font-size:1.3rem; color:var(--ink); }
+
+  /* ===== Tables ===== */
+  .tbl-wrap{ margin-top:20px; width:100%; max-width:800px; overflow-x:auto; }
+  table.notes-table{ width:100%; table-layout:fixed; border-collapse:collapse; font-size:.82rem; background:#fff; }
+  table.notes-table th{ background:var(--ink); color:#fff; padding:9px 12px; text-align:center; font-family:'Kalam',cursive; font-weight:700; font-size:.82rem; }
+  table.notes-table td{ padding:9px 12px; border-bottom:1px solid var(--grid); text-align:center; vertical-align:top; }
+  table.notes-table tr:last-child td{ border-bottom:none; }
+
+  /* ===== Closing slide ===== */
+  #last .thanks-box{ padding:50px 70px; text-align:center; }
+  #last h1{ font-size:3.2rem; margin:0; }
+
+  /* ===== Nav ===== */
+  .navbar{ position:fixed; bottom:18px; left:0; right:0; display:flex; align-items:center; justify-content:center; gap:18px; z-index:50; }
+  .navbtn{
+    font-family:'Kalam',cursive; font-weight:700; font-size:1rem; cursor:pointer;
+    border:2.5px solid var(--ink); background:#fff; border-radius:30px; padding:8px 20px;
+    box-shadow: 2px 2px 0 rgba(30,30,30,0.15); user-select:none;
+  }
+  .navbtn:active{ transform: translate(1px,1px); box-shadow:none; }
+  .counter{ font-family:'Kalam',cursive; font-size:.95rem; color:#555; min-width:70px; text-align:center; }
+  .dots{ position:fixed; top:16px; left:0; right:0; display:flex; justify-content:center; gap:6px; z-index:50; flex-wrap:wrap; padding:0 20px;}
+  .dot{ width:8px; height:8px; border-radius:50%; border:2px solid var(--ink); background:#fff; cursor:pointer; }
+  .dot.on{ background:var(--ink); }
+
+  @media (max-width: 900px){
+    h1.title{ font-size:2rem; }
+    #s1 h1.title{ font-size:2.4rem; }
+    .flow-box, .cat-card, .note-card{ width:150px; }
+    table.notes-table{ font-size:.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dots" id="dots"></div>
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1 : TITLE -->
+  <section class="slide active" id="s1">
+    <div class="logo-wrap">
+      <div class="badge">HelpDesk Lite · Day 4</div>
+      <h1 class="title display">Git &amp; Collaboration</h1>
+      <svg class="arrow-under" viewBox="0 0 260 26"><path d="M8 14 Q130 -6 252 14" stroke="#1e1e1e" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+      <p class="tagline">أساسيات Git، ورك فلو الفرق الحقيقية، وتوثيق القرارات الهندسية بـ RFC وADR.</p>
+      <div class="stack">
+        <span class="chip">🌳 Git Basics</span>
+        <span class="chip">🔀 Branching</span>
+        <span class="chip">👥 Team Workflow</span>
+        <span class="chip">🧠 RFC / ADR</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 : CURSOR TIPS -->
+  <section class="slide" id="l1">
+    <div class="eyebrow">📝 محاضرة Day 4 — تكملة</div>
+    <h2 class="stitle display">Cursor Tips</h2>
+    <div class="note-cols">
+      <div class="note-card sketch r1 hachure-indigo">
+        <h3>🚫 .cursorignore</h3>
+        <ul>
+          <li>بيحدد الفايلز/الفولدرات اللي Cursor مايدخلش يقرأها</li>
+          <li>مثال: lib/models/api_manager.dart</li>
+        </ul>
+      </div>
+      <div class="note-card sketch r2 hachure-teal">
+        <h3>🔗 v0 / Bolt Integration</h3>
+        <ul>
+          <li>بناء الواجهة الأولى على v0 أو Bolt</li>
+          <li>بعد كده فتح الكود وتعديله في Cursor</li>
+          <li>إمكانية تحديد ملف أو جزء صغير بس للتعديل</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 : INTRO TO GIT -->
+  <section class="slide" id="l2">
+    <div class="eyebrow">📝 محاضرة Day 4</div>
+    <h2 class="stitle display">إيه هو Git أصلًا؟</h2>
+    <div class="cat-row">
+      <div class="cat-card sketch r1 hachure-indigo">
+        <div class="icon">📚</div>
+        <h3>Version Control System</h3>
+        <p>نظام لتتبع وإدارة نسخ الكود عبر الوقت.</p>
+      </div>
+      <div class="cat-card sketch r2 hachure-teal">
+        <div class="icon">👤</div>
+        <h3>مين عمله؟</h3>
+        <p>Linus Torvalds — نفس الشخص اللي عمل نظام Linux.</p>
+      </div>
+      <div class="cat-card sketch r3 hachure-amber">
+        <div class="icon">💾</div>
+        <h3>فايدته</h3>
+        <p>تسجيل كل نقطة تغيير (Version) في المشروع، وتوثيقها بـ Commit.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 : GIT BASICS & LOCAL CONFIG -->
+  <section class="slide" id="l3">
+    <div class="eyebrow">📝 محاضرة Day 4</div>
+    <h2 class="stitle display">Git Basics &amp; Local Configuration</h2>
+    <div class="code-block">git init<br><span class="cmt"># بينشئ مشروع Git جديد + فولدر مخفي .git</span><br><br>git config user.name "Mohamed Ismail"<br>git config user.email "mohamed.mr@gmail.com"<br><span class="cmt"># تعريف صاحب الكود لهذا المشروع بس</span><br><br>git config --global user.name "Your Name"<br>git config --global user.email "your.email@gmail.com"<br><span class="cmt"># نفس الإعداد لكل المشاريع مرة واحدة</span></div>
+  </section>
+
+  <!-- SLIDE 5 : GIT WORKFLOW STATUS/ADD/COMMIT/LOG -->
+  <section class="slide" id="l4">
+    <div class="eyebrow">📝 محاضرة Day 4</div>
+    <h2 class="stitle display">Git Workflow: Add, Commit &amp; Status</h2>
+    <div class="steps">
+      <div class="step-row sketch r1 hachure-indigo">
+        <div class="n">1</div>
+        <div><h4>فحص الحالة</h4><p><code>git status</code> — يوضح الفايلات الجديدة (Untracked) وغير المحفوظة</p></div>
+      </div>
+      <div class="step-row sketch r2 hachure-teal">
+        <div class="n">2</div>
+        <div><h4>تجهيز الفايل</h4><p><code>git add dashboard.txt</code> — نقل الفايل لـ Staging Area</p></div>
+      </div>
+      <div class="step-row sketch r3 hachure-amber">
+        <div class="n">3</div>
+        <div><h4>حفظ رسمي</h4><p><code>git commit -m "added new feat (drawer)"</code> — تثبيت التغييرات مع وصف بسيط</p></div>
+      </div>
+      <div class="step-row sketch r4 hachure-rose">
+        <div class="n">4</div>
+        <div><h4>عرض التاريخ</h4><p><code>git log</code> — كل الـ Commits بالتفصيل: Hash، Author، التاريخ والوقت</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 : SWITCHING & GUI -->
+  <section class="slide" id="l5">
+    <div class="eyebrow">📝 محاضرة Day 4</div>
+    <h2 class="stitle display">Switching &amp; GUI Features</h2>
+    <div class="note-cols">
+      <div class="note-card sketch r1 hachure-indigo">
+        <h3>⏪ الرجوع لـ Commit قديم</h3>
+        <ul>
+          <li><code>git checkout &lt;hashcode&gt;</code></li>
+          <li><code>git checkout master</code> — للرجوع للوضع الرئيسي</li>
+        </ul>
+      </div>
+      <div class="note-card sketch r2 hachure-teal">
+        <h3>🖱️ GUI جوة VS Code</h3>
+        <ul>
+          <li>مش شرط أوامر — أيقونة Source Control على الشمال</li>
+          <li>كتابة رسالة الـ Commit في الـ Box + زر Commit</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 : LOCAL TO REMOTE (WHY) -->
+  <section class="slide" id="l6">
+    <div class="eyebrow">📝 محاضرة Day 4</div>
+    <h2 class="stitle display">من Local لـ Remote — ليه أصلًا؟</h2>
+    <p class="sub">الـ Local Repo محدش شايفه غيرك على جهازك. للعمل مع فريق أو رفع الكود بأمان، لازم Remote Repository.</p>
+    <div class="cat-row">
+      <div class="cat-card sketch r1 hachure-indigo"><div class="icon">🐙</div><h3>GitHub</h3></div>
+      <div class="cat-card sketch r2 hachure-teal"><div class="icon">🦊</div><h3>GitLab</h3></div>
+      <div class="cat-card sketch r3 hachure-amber"><div class="icon">🔷</div><h3>Azure DevOps</h3></div>
+      <div class="cat-card sketch r4 hachure-rose"><div class="icon">🪣</div><h3>Bitbucket</h3></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8 : REAL-WORLD BRANCHING WORKFLOW -->
+  <section class="slide" id="l7">
+    <div class="eyebrow">📝 محاضرة Day 4</div>
+    <h2 class="stitle display">Real-World Branching Workflow</h2>
+    <p class="sub">في شغل الشركات، ممنوع تمامًا الدفع أو التعديل على الـ Master الرئيسي مباشرة.</p>
+    <div class="flow">
+      <div class="flow-box sketch r1"><div class="n">1</div><h4>Jira Ticket</h4><p>مهمة برقم وSummary واضح</p></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box sketch r2"><div class="n">2</div><h4>Branch جديد</h4><p>باسم واضح يعبر عن المهمة</p></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box sketch r3"><div class="n">3</div><h4>الشغل والتعديل</h4><p>كله جوه البرانش الجديد</p></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box sketch r4"><div class="n">4</div><h4>Pull Request</h4><p>رفعه ومراجعة الفريق له</p></div>
+    </div>
+    <div class="code-block">git branch added-new-saver-pro-page<br><span class="cmt"># أو أسرع: إنشاء البرانش والانتقال له مرة واحدة</span><br>git checkout -b added-new-saver-pro-page</div>
+  </section>
+
+  <!-- SLIDE 9 : CONNECTING TO REMOTE -->
+  <section class="slide" id="l8">
+    <div class="eyebrow">📝 محاضرة Day 4</div>
+    <h2 class="stitle display">ربط الجهاز بالـ Remote Repo</h2>
+    <div class="code-block">git remote add origin https://github.com/username/repo.git<br><span class="cmt"># 1. ربط الـ Local Repo بالـ Remote</span><br><br>git branch -M main<br><span class="cmt"># 2. توحيد اسم البرانش الرئيسي لـ main</span><br><br>git push -u origin main<br><span class="cmt"># 3. رفع الكود لأول مرة مع ربط الـ Tracking</span></div>
+    <p class="sub" style="margin-top:14px; font-size:.85rem;">📌 كلمة origin هي الاسم الافتراضي للـ Remote Repo بتاعك.</p>
+  </section>
+
+  <!-- SLIDE 10 : CLONE VS FORK -->
+  <section class="slide" id="l9">
+    <div class="eyebrow">📝 محاضرة Day 4 — Working as a Team</div>
+    <h2 class="stitle display">Git Clone مقابل Git Fork</h2>
+    <div class="note-cols">
+      <div class="note-card sketch r1 hachure-indigo">
+        <h3>📥 Git Clone</h3>
+        <ul>
+          <li>تنزيل نسخة طبق الأصل من المشروع على الجهاز</li>
+          <li>للاشتغال المباشر عليه</li>
+        </ul>
+      </div>
+      <div class="note-card sketch r2 hachure-teal">
+        <h3>🍴 Git Fork</h3>
+        <ul>
+          <li>نسخة من مشروع حد تاني داخل حسابك على GitHub</li>
+          <li>للتعديل عليها بحرية وعمل Pull Request بعدين</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11 : TERMINOLOGY TABLE -->
+  <section class="slide" id="l10">
+    <div class="eyebrow">📝 محاضرة Day 4</div>
+    <h2 class="stitle display">اختلاف المصطلحات بين المنصات</h2>
+    <div class="tbl-wrap">
+      <table class="notes-table">
+        <tr><th>GitHub / Bitbucket</th><th>GitLab</th><th>Azure DevOps</th></tr>
+        <tr><td>Pull Request (PR)</td><td>Merge Request (MR)</td><td>Pull Request (PR)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- SLIDE 12 : RFC & ADR -->
+  <section class="slide" id="l11">
+    <div class="eyebrow">📝 محاضرة Day 4 — Architecture Documentation</div>
+    <h2 class="stitle display">RFC &amp; ADR</h2>
+    <div class="note-cols">
+      <div class="note-card sketch r1 hachure-indigo">
+        <h3>💬 RFC (Request For Comments)</h3>
+        <ul>
+          <li>مستند لاقتراح فكرة/حل ومناقشته مع الفريق</li>
+          <li>الفكرة والمشكلة + الحلول والبدائل</li>
+          <li>ليه اخترنا الحل ده بالذات</li>
+          <li>أسئلة مفتوحة للمناقشة</li>
+          <li>تسمية الملف: RFC-001-title.txt</li>
+        </ul>
+      </div>
+      <div class="note-card sketch r2 hachure-teal">
+        <h3>🏛️ ADR (Architecture Decision Record)</h3>
+        <ul>
+          <li>سجل قرارات الهندسة المعمارية للمشروع</li>
+          <li>What: إيه القرار اللي اتاخد؟</li>
+          <li>Why: ليه اتاخد القرار ده؟</li>
+          <li>Trade-offs: إيه التنازلات المقبولة؟</li>
+          <li>Where: القرار مطبق فين في الكود؟</li>
+          <li>تسمية الملف: ADR-001.txt</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 13 : COMPLETE DEVELOPER WORKFLOW -->
+  <section class="slide" id="l12">
+    <div class="eyebrow">📝 محاضرة Day 4</div>
+    <h2 class="stitle display">The Standard Developer Loop</h2>
+    <p class="sub">الدورة اليومية اللي بياخد فيها المبرمج معظم وقته في الشغل.</p>
+    <div class="flow">
+      <div class="flow-box sketch r1"><div class="n">📋</div><h4>Jira Ticket</h4></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box sketch r2"><div class="n">🌿</div><h4>New Branch</h4></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box sketch r3"><div class="n">💾</div><h4>Commit Changes</h4></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box sketch r4"><div class="n">⬇️</div><h4>Git Pull</h4></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box sketch r1"><div class="n">⬆️</div><h4>Git Push</h4></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box sketch r2"><div class="n">🔀</div><h4>Pull Request</h4></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box sketch r3"><div class="n">✅</div><h4>Code Merge</h4></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 14 : CLOSING -->
+  <section class="slide" id="last">
+    <div class="thanks-box sketch r2">
+      <h1 class="display">خلصنا 🎉</h1>
+      <p class="sub" style="margin-top:14px;">Day 4 — Git </p>
+    </div>
+  </section>
+
+</div>
+
+<div class="navbar">
+  <div class="navbtn" onclick="go(-1)">→ السابق</div>
+  <div class="counter" id="counter">1 / 14</div>
+  <div class="navbtn" onclick="go(1)">التالي ←</div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let idx = 0;
+  const dotsEl = document.getElementById('dots');
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' on':'');
+    d.onclick = ()=>{ idx=i; render(); };
+    dotsEl.appendChild(d);
+  }
+  function render(){
+    slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+    document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('on', i===idx));
+    document.getElementById('counter').textContent = (idx+1)+' / '+total;
+  }
+  function go(dir){
+    idx = Math.min(total-1, Math.max(0, idx+dir));
+    render();
+  }
+  window.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowLeft') go(1);      // RTL: left arrow = next
+    if(e.key==='ArrowRight') go(-1);    // RTL: right arrow = prev
+    if(e.key===' ') go(1);
+  });
+</script>
+
+</body>
+</html>
