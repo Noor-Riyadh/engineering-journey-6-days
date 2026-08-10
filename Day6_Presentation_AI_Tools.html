@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 6 — Presentation AI Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rakkas&family=Tajawal:wght@400;500;700;900&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#3a3a3a;
+    --paper:#faf8f3;
+    --indigo:#6d6ad6;
+    --indigo-light:#e6e7fb;
+    --teal:#3fa89a;
+    --teal-light:#e0f5f1;
+    --amber:#d19a3d;
+    --amber-light:#faf0dc;
+    --rose:#d97a8f;
+    --rose-light:#fbe8ec;
+    --grid:#e9e5da;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--paper);
+    background-image: radial-gradient(circle, #e4dfd0 1.3px, transparent 1.3px);
+    background-size: 26px 26px;
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{ font-family:'Rakkas', cursive; }
+  .wrap{ max-width:980px; margin:0 auto; padding:6vh 6vw 8vh; }
+
+  .hero{ text-align:center; margin-bottom:5vh; }
+  .badge{
+    display:inline-block; font-family:'Kalam',cursive; font-weight:700; font-size:1rem;
+    border:2.5px solid var(--ink); border-radius:40px; padding:6px 22px;
+    transform:rotate(-2deg); background:#fff; margin-bottom:18px;
+  }
+  h1.title{ font-size:2.8rem; margin:0 0 10px; }
+  .hero p{ font-size:1.05rem; color:#555; max-width:560px; margin:0 auto; line-height:1.8; }
+
+  .sketch{
+    border: 2.5px solid var(--ink);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    background:#fff;
+    box-shadow: 3px 3px 0 rgba(30,30,30,0.08);
+  }
+  .r1{ transform:rotate(-0.6deg); } .r2{ transform:rotate(0.6deg); }
+  .r3{ transform:rotate(-1deg); } .r4{ transform:rotate(0.4deg); }
+  .r5{ transform:rotate(-0.4deg); } .r6{ transform:rotate(0.8deg); }
+  .r7{ transform:rotate(-0.7deg); } .r8{ transform:rotate(0.5deg); }
+
+  .hachure-indigo{ background-image: repeating-linear-gradient(45deg, var(--indigo-light) 0 3px, transparent 3px 9px); }
+  .hachure-teal{ background-image: repeating-linear-gradient(45deg, var(--teal-light) 0 3px, transparent 3px 9px); }
+  .hachure-amber{ background-image: repeating-linear-gradient(45deg, var(--amber-light) 0 3px, transparent 3px 9px); }
+  .hachure-rose{ background-image: repeating-linear-gradient(45deg, var(--rose-light) 0 3px, transparent 3px 9px); }
+
+  .grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; }
+  .tool-card{
+    padding:26px 18px; text-align:center; position:relative;
+  }
+  .tool-card .icon{ font-size:2.1rem; margin-bottom:10px; }
+  .tool-card h3{ font-family:'Kalam',cursive; font-size:1.05rem; margin:0; color:var(--ink); }
+
+  .tool-card.starred{
+    border-width:3px; box-shadow: 4px 4px 0 rgba(30,30,30,0.14);
+  }
+  .star-badge{
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(-3deg);
+    font-family:'Kalam',cursive; font-weight:700; font-size:.72rem; color:#fff;
+    background:var(--amber); border:2px solid var(--ink); border-radius:20px;
+    padding:3px 12px; white-space:nowrap;
+  }
+
+  footer.page-end{ text-align:center; margin-top:6vh; font-size:.8rem; color:#999; }
+
+  @media (max-width: 720px){
+    .grid{ grid-template-columns:repeat(2, 1fr); }
+    h1.title{ font-size:2.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="badge">Day 6 · Capstone</div>
+    <h1 class="title display">Presentation AI Tools</h1>
+    <p>أدوات ذكاء اصطناعي بتساعد في عمل عروض تقديمية احترافية بسرعة — من فكرة لسلايدات جاهزة.</p>
+  </div>
+
+  <div class="grid">
+    <div class="tool-card sketch r1 hachure-indigo">
+      <div class="icon">🔁</div>
+      <h3>Replit</h3>
+    </div>
+
+    <div class="tool-card sketch r2 hachure-teal">
+      <div class="icon">✨</div>
+      <h3>Gamma</h3>
+    </div>
+
+    <div class="tool-card sketch r3 hachure-amber">
+      <div class="icon">🎨</div>
+      <h3>Canva</h3>
+    </div>
+
+    <div class="tool-card sketch r4 hachure-rose">
+      <div class="icon">⚡</div>
+      <h3>Bolt</h3>
+    </div>
+
+    <div class="tool-card sketch r5 hachure-indigo">
+      <div class="icon">🖌️</div>
+      <h3>Claude Design</h3>
+    </div>
+
+    <div class="tool-card sketch r6 hachure-amber starred" style="border-color:var(--amber);">
+      <span class="star-badge">⭐ Highly Recommended</span>
+      <div class="icon">🌟</div>
+      <h3>Prezi</h3>
+    </div>
+
+    <div class="tool-card sketch r7 hachure-teal">
+      <div class="icon">💚</div>
+      <h3>Lovable</h3>
+    </div>
+
+    <div class="tool-card sketch r8 hachure-rose">
+      <div class="icon">▲</div>
+      <h3>v0</h3>
+    </div>
+
+    <div class="tool-card sketch r1 hachure-teal">
+      <div class="icon">🖼️</div>
+      <h3>Figma</h3>
+    </div>
+  </div>
+
+  <footer class="page-end">Noor Riyadh · Day 6 · Presentation AI Tools</footer>
+
+</div>
+
+</body>
+</html>
